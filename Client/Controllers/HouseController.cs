@@ -46,30 +46,36 @@ namespace Client.Controllers
             ViewBag.TypeId = new SelectList(_db.Types, "Id", "Type1");
             return View();
         }
-        
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,RoomCount,TypeId,Price,AvailabilityDate,Owner,Photo")] HouseViewModel house)
+
+        private static House ViewModelToDbModel(HouseViewModel house)
         {
             var hou = new House
             {
-                Id = house.Id,
                 Owner = house.Owner,
                 Price = house.Price,
                 RoomCount = house.RoomCount,
                 TypeId = house.TypeId,
-                Type = house.Type,
-                AvailabilityDate = DateTime.Now
+                AvailabilityDate = DateTime.Now,
+                Photo = PictureToBytes(house)
             };
+            return hou;
+        }
 
-            if (house.Photo != null && Path.GetFileName(house.Photo.FileName) != String.Empty)
-            {
-                var contentLength = house.Photo.ContentLength;
-                var inputStream = house.Photo.InputStream;
-                hou.Photo = new byte[contentLength];
-                inputStream.Read(hou.Photo, 0, contentLength);
-            }
+        private static byte[] PictureToBytes(HouseViewModel house)
+        {
+            if (house.Photo == null) return null;
+            var contentLength = house.Photo.ContentLength;
+            var inputStream = house.Photo.InputStream;
+            var buff = new byte[contentLength];
+            inputStream.Read(buff, 0, contentLength);
+            return buff;
+        }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "Id,RoomCount,TypeId,Price,AvailabilityDate,Owner,Photo")] HouseViewModel house)
+        {
+            var hou = ViewModelToDbModel(house);
 
             if (ModelState.IsValid)
             {
