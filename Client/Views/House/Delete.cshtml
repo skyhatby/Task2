@@ -48,7 +48,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Photo)
+            <img src="@Url.Action("GetImg", "House", new { id = Model.Id })" />
         </dd>
 
         <dt>
@@ -61,7 +61,8 @@
 
     </dl>
 
-    @using (Html.BeginForm()) {
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">

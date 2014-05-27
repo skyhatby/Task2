@@ -1,4 +1,6 @@
-﻿@model DbFirstModel.House
+﻿@using System.Drawing
+@using System.Drawing.Imaging
+@model DbFirstModel.House
 
 @{
     ViewBag.Title = "Details";
@@ -8,7 +10,7 @@
 
 <div>
     <h4>House</h4>
-	<hr />
+    <hr />
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.RoomCount)
@@ -47,7 +49,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Photo)
+            <img src="@Url.Action("GetImg", "House", new { id = Model.Id })" />
         </dd>
 
         <dt>

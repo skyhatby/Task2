@@ -1,7 +1,13 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Web;
 using System.Web.Mvc;
+using Client.Models.ViewModels;
 using DbFirstModel;
 
 namespace Client.Controllers
@@ -34,24 +40,40 @@ namespace Client.Controllers
             }
             return View(house);
         }
-
-        // GET: /House/Create
+        
         public ActionResult Create()
         {
             ViewBag.TypeId = new SelectList(_db.Types, "Id", "Type1");
             return View();
         }
-
-        // POST: /House/Create
-        // Чтобы защититься от атак чрезмерной передачи данных, включите определенные свойства, для которых следует установить привязку. Дополнительные 
-        // сведения см. в статье http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include="Id,RoomCount,TypeId,Price,AvailabilityDate,Owner,Photo")] House house)
+        public ActionResult Create([Bind(Include = "Id,RoomCount,TypeId,Price,AvailabilityDate,Owner,Photo")] HouseViewModel house)
         {
+            var hou = new House
+            {
+                Id = house.Id,
+                Owner = house.Owner,
+                Price = house.Price,
+                RoomCount = house.RoomCount,
+                TypeId = house.TypeId,
+                Type = house.Type,
+                AvailabilityDate = DateTime.Now
+            };
+
+            if (house.Photo != null && Path.GetFileName(house.Photo.FileName) != String.Empty)
+            {
+                var contentLength = house.Photo.ContentLength;
+                var inputStream = house.Photo.InputStream;
+                hou.Photo = new byte[contentLength];
+                inputStream.Read(hou.Photo, 0, contentLength);
+            }
+
+
             if (ModelState.IsValid)
             {
-                _db.Houses.Add(house);
+                _db.Houses.Add(hou);
                 _db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -60,6 +82,17 @@ namespace Client.Controllers
             return View(house);
         }
 
+        public ActionResult GetImg(int id)
+        {
+            var photo = _db.Houses.Where(x=>x.Id==id).Select(x => x.Photo).First();
+            using (var streak = new MemoryStream(photo))
+            {
+                var srcImage = Image.FromStream(streak);
+                var myimg = new Bitmap(srcImage);
+                myimg.Save(streak, ImageFormat.Jpeg);
+                return File(streak.ToArray(), "image/jpeg");
+            }
+        }
         // GET: /House/Edit/5
         public ActionResult Edit(int? id)
         {
