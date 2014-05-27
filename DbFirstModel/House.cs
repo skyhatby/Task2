@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Client.Models
+namespace DbFirstModel
 {
     using System;
     using System.Collections.Generic;

@@ -9,7 +9,7 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="RoomCount" Type="int" Nullable="false" />
           <Property Name="TypeId" Type="int" Nullable="false" />
           <Property Name="Price" Type="int" Nullable="false" />
@@ -21,13 +21,11 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Type" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <Association Name="FK_Houses_Types">
-          <End Role="Types" Type="Self.Types" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
+          <End Role="Types" Type="Self.Types" Multiplicity="1" />
           <End Role="Houses" Type="Self.Houses" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Types">
@@ -55,7 +53,7 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="RoomCount" Type="Int32" Nullable="false" />
           <Property Name="TypeId" Type="Int32" Nullable="false" />
           <Property Name="Price" Type="Int32" Nullable="false" />
@@ -68,14 +66,12 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Type1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Houses" Relationship="Self.FK_Houses_Types" FromRole="Types" ToRole="Houses" />
         </EntityType>
         <Association Name="FK_Houses_Types">
-          <End Role="Types" Type="Self.Type" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
+          <End Role="Types" Type="Self.Type" Multiplicity="1" />
           <End Role="Houses" Type="Self.House" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Types">
@@ -86,7 +82,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="DbEntities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="Test" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Houses" EntityType="Self.House" />
           <EntitySet Name="Types" EntityType="Self.Type" />
           <AssociationSet Name="FK_Houses_Types" Association="Self.FK_Houses_Types">
@@ -99,7 +95,7 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="Хранилище DbModelContainer" CdmEntityContainer="DbEntities">
+        <EntityContainerMapping StorageEntityContainer="Хранилище DbModelContainer" CdmEntityContainer="Test">
           <EntitySetMapping Name="Houses">
             <EntityTypeMapping TypeName="DbModel.House">
               <MappingFragment StoreEntitySet="Houses">

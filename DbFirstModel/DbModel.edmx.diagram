@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="20c7512787cb47bfb73fb9bdc055931d" Name="Diagram1">
+      <Diagram DiagramId="e205f5c0cf86424ca3ee3e0a36f00204" Name="Diagram1">
         <EntityTypeShape EntityType="DbModel.House" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
         <EntityTypeShape EntityType="DbModel.Type" Width="1.5" PointX="0.75" PointY="1.375" IsExpanded="true" />
         <AssociationConnector Association="DbModel.FK_Houses_Types" ManuallyRouted="false" />

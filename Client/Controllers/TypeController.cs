@@ -2,24 +2,21 @@
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
-using Client.Models;
+using DbFirstModel;
 
 namespace Client.Controllers
 {
-    [Authorize]
     public class TypeController : Controller
     {
-        private readonly DbEntities _db = new DbEntities();
+        private readonly Test _db = new Test();
 
         // GET: /Type/
-        [AllowAnonymous]
         public ActionResult Index()
         {
             return View(_db.Types.ToList());
         }
 
         // GET: /Type/Details/5
-        [AllowAnonymous]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -47,14 +44,10 @@ namespace Client.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include="Id,Type1")] Type type)
         {
-            if (ModelState.IsValid)
-            {
-                _db.Types.Add(type);
-                _db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View(type);
+            if (!ModelState.IsValid) return View(type);
+            _db.Types.Add(type);
+            _db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         // GET: /Type/Edit/5

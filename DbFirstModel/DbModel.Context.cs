@@ -7,16 +7,16 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Client.Models
+namespace DbFirstModel
 {
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class DbEntities : DbContext
+    public partial class Test : DbContext
     {
-        public DbEntities()
-            : base("name=DbEntities")
+        public Test()
+            : base("name=Test")
         {
         }
     

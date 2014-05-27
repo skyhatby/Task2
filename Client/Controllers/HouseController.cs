@@ -2,13 +2,13 @@
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
-using Client.Models;
+using DbFirstModel;
 
 namespace Client.Controllers
 {
     public class HouseController : Controller
     {
-        private readonly DbEntities _db = new DbEntities();
+        private readonly Test _db = new Test();
 
         // GET: /House/
         public ActionResult Index()
@@ -24,7 +24,7 @@ namespace Client.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            House house = _db.Houses.Find(id);
+            var house = _db.Houses.Find(id);
             if (house == null)
             {
                 return HttpNotFound();
@@ -33,7 +33,6 @@ namespace Client.Controllers
         }
 
         // GET: /House/Create
-        [Authorize]
         public ActionResult Create()
         {
             ViewBag.TypeId = new SelectList(_db.Types, "Id", "Type1");
@@ -45,7 +44,6 @@ namespace Client.Controllers
         // сведения см. в статье http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
         public ActionResult Create([Bind(Include="Id,RoomCount,TypeId,Price,AvailabilityDate,Owner,Photo")] House house)
         {
             if (ModelState.IsValid)
@@ -60,14 +58,13 @@ namespace Client.Controllers
         }
 
         // GET: /House/Edit/5
-        [Authorize]
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            House house = _db.Houses.Find(id);
+            var house = _db.Houses.Find(id);
             if (house == null)
             {
                 return HttpNotFound();
@@ -81,7 +78,6 @@ namespace Client.Controllers
         // сведения см. в статье http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
         public ActionResult Edit([Bind(Include="Id,RoomCount,TypeId,Price,AvailabilityDate,Owner,Photo")] House house)
         {
             if (ModelState.IsValid)
@@ -95,14 +91,13 @@ namespace Client.Controllers
         }
 
         // GET: /House/Delete/5
-        [Authorize]
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            House house = _db.Houses.Find(id);
+            var house = _db.Houses.Find(id);
             if (house == null)
             {
                 return HttpNotFound();
@@ -113,10 +108,9 @@ namespace Client.Controllers
         // POST: /House/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize]
         public ActionResult DeleteConfirmed(int id)
         {
-            House house = _db.Houses.Find(id);
+            var house = _db.Houses.Find(id);
             _db.Houses.Remove(house);
             _db.SaveChanges();
             return RedirectToAction("Index");
