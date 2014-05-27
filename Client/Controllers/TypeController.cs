@@ -13,9 +13,17 @@ namespace Client.Controllers
 
         // GET: /Type/
         [AllowAnonymous]
+        [OutputCache(Duration = 1000)]
         public ActionResult Index()
         {
-            return View(_db.Types.ToList());
+            return View();
+        }
+
+        public PartialViewResult TypesPartial()
+        {
+            var types = _db.Types.ToList();
+            return PartialView(types);
+
         }
 
         // GET: /Type/Details/5
@@ -35,6 +43,7 @@ namespace Client.Controllers
         }
 
         // GET: /Type/Create
+        [OutputCache(Duration = 1000)]
         public ActionResult Create()
         {
             return View();

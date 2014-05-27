@@ -30,6 +30,7 @@ namespace Client.Controllers
         //
         // GET: /Account/Login
         [AllowAnonymous]
+        [OutputCache(Duration = 1000)]
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
@@ -64,6 +65,7 @@ namespace Client.Controllers
         //
         // GET: /Account/Register
         [AllowAnonymous]
+        [OutputCache(Duration = 1000)]
         public ActionResult Register()
         {
             return View();

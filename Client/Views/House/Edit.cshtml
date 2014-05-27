@@ -10,7 +10,7 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>House</h4>
         <hr />
@@ -41,13 +41,7 @@
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.AvailabilityDate, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.AvailabilityDate)
-                @Html.ValidationMessageFor(model => model.AvailabilityDate)
-            </div>
-        </div>
+        @Html.HiddenFor(model => model.AvailabilityDate)
 
         <div class="form-group">
             @Html.LabelFor(model => model.Owner, new { @class = "control-label col-md-2" })

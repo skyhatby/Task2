@@ -19,10 +19,17 @@ namespace Client.Controllers
 
         // GET: /House/
         [AllowAnonymous]
+        [OutputCache(Duration = 1000)]
         public ActionResult Index()
         {
+            return View();
+        }
+
+        public PartialViewResult HousesPartial()
+        {
             var houses = _db.Houses.Include(h => h.Type);
-            return View(houses.ToList());
+            return PartialView(houses);
+            
         }
 
         // GET: /House/Details/5
@@ -40,7 +47,8 @@ namespace Client.Controllers
             }
             return View(house);
         }
-        
+
+        [OutputCache(Duration = 1000)]
         public ActionResult Create()
         {
             ViewBag.TypeId = new SelectList(_db.Types, "Id", "Type1");
@@ -70,7 +78,7 @@ namespace Client.Controllers
             inputStream.Read(buff, 0, contentLength);
             return buff;
         }
-
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,RoomCount,TypeId,Price,AvailabilityDate,Owner,Photo")] HouseViewModel house)
