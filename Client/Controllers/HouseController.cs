@@ -6,11 +6,13 @@ using DbFirstModel;
 
 namespace Client.Controllers
 {
+    [Authorize]
     public class HouseController : Controller
     {
         private readonly Test _db = new Test();
 
         // GET: /House/
+        [AllowAnonymous]
         public ActionResult Index()
         {
             var houses = _db.Houses.Include(h => h.Type);
@@ -18,6 +20,7 @@ namespace Client.Controllers
         }
 
         // GET: /House/Details/5
+        [AllowAnonymous]
         public ActionResult Details(int? id)
         {
             if (id == null)

@@ -6,17 +6,20 @@ using DbFirstModel;
 
 namespace Client.Controllers
 {
+    [Authorize]
     public class TypeController : Controller
     {
         private readonly Test _db = new Test();
 
         // GET: /Type/
+        [AllowAnonymous]
         public ActionResult Index()
         {
             return View(_db.Types.ToList());
         }
 
         // GET: /Type/Details/5
+        [AllowAnonymous]
         public ActionResult Details(int? id)
         {
             if (id == null)
