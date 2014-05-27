@@ -162,6 +162,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HouseController.cs" />
     <Compile Include="Controllers\TypeController.cs" />
+    <Compile Include="CustomModule\CustModule.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -194,7 +195,9 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
