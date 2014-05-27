@@ -4,7 +4,15 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Хранилище DbModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="Хранилище DbModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Comments">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Value" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="HouseId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Houses">
           <Key>
             <PropertyRef Name="Id" />
@@ -24,6 +32,18 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Type" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <Association Name="FK_Comments_Houses">
+          <End Role="Houses" Type="Self.Houses" Multiplicity="1" />
+          <End Role="Comments" Type="Self.Comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Houses">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Comments">
+              <PropertyRef Name="HouseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Houses_Types">
           <End Role="Types" Type="Self.Types" Multiplicity="1" />
           <End Role="Houses" Type="Self.Houses" Multiplicity="*" />
@@ -37,15 +57,19 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="Хранилище DbModelContainer">
+          <EntitySet Name="Comments" EntityType="Self.Comments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Houses" EntityType="Self.Houses" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Types" EntityType="Self.Types" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Comments_Houses" Association="Self.FK_Comments_Houses">
+            <End Role="Houses" EntitySet="Houses" />
+            <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
           <AssociationSet Name="FK_Houses_Types" Association="Self.FK_Houses_Types">
             <End Role="Types" EntitySet="Types" />
             <End Role="Houses" EntitySet="Houses" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="DbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -61,6 +85,7 @@
           <Property Name="Owner" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Photo" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
           <NavigationProperty Name="Type" Relationship="Self.FK_Houses_Types" FromRole="Houses" ToRole="Types" />
+          <NavigationProperty Name="Comments" Relationship="DbModel.FK_Comments_Houses" FromRole="House" ToRole="Comment" />
         </EntityType>
         <EntityType Name="Type">
           <Key>
@@ -89,7 +114,33 @@
             <End Role="Types" EntitySet="Types" />
             <End Role="Houses" EntitySet="Houses" />
           </AssociationSet>
+          <EntitySet Name="Comments" EntityType="DbModel.Comment" />
+          <AssociationSet Name="FK_Comments_Houses" Association="DbModel.FK_Comments_Houses">
+            <End Role="House" EntitySet="Houses" />
+            <End Role="Comment" EntitySet="Comments" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Comment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Value" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="HouseId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="House" Relationship="DbModel.FK_Comments_Houses" FromRole="Comment" ToRole="House" />
+        </EntityType>
+        <Association Name="FK_Comments_Houses">
+          <End Type="DbModel.House" Role="House" Multiplicity="1" />
+          <End Type="DbModel.Comment" Role="Comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="House">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Comment">
+              <PropertyRef Name="HouseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -114,6 +165,15 @@
               <MappingFragment StoreEntitySet="Types">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Type1" ColumnName="Type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Comments">
+            <EntityTypeMapping TypeName="DbModel.Comment">
+              <MappingFragment StoreEntitySet="Comments">
+                <ScalarProperty Name="HouseId" ColumnName="HouseId" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

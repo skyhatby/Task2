@@ -8,6 +8,8 @@
         <EntityTypeShape EntityType="DbModel.House" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
         <EntityTypeShape EntityType="DbModel.Type" Width="1.5" PointX="0.75" PointY="1.375" IsExpanded="true" />
         <AssociationConnector Association="DbModel.FK_Houses_Types" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="DbModel.Comment" Width="1.5" PointX="5.25" PointY="1.5" />
+        <AssociationConnector Association="DbModel.FK_Comments_Houses" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

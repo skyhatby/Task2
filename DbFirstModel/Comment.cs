@@ -12,22 +12,12 @@ namespace DbFirstModel
     using System;
     using System.Collections.Generic;
     
-    public partial class House
+    public partial class Comment
     {
-        public House()
-        {
-            this.Comments = new HashSet<Comment>();
-        }
-    
         public int Id { get; set; }
-        public int RoomCount { get; set; }
-        public int TypeId { get; set; }
-        public int Price { get; set; }
-        public System.DateTime AvailabilityDate { get; set; }
-        public string Owner { get; set; }
-        public byte[] Photo { get; set; }
+        public string Value { get; set; }
+        public int HouseId { get; set; }
     
-        public virtual Type Type { get; set; }
-        public virtual ICollection<Comment> Comments { get; set; }
+        public virtual House House { get; set; }
     }
 }

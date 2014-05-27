@@ -27,5 +27,6 @@ namespace DbFirstModel
     
         public virtual DbSet<House> Houses { get; set; }
         public virtual DbSet<Type> Types { get; set; }
+        public virtual DbSet<Comment> Comments { get; set; }
     }
 }
