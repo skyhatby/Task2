@@ -58,7 +58,7 @@ namespace Client.Controllers
             }
             return RedirectToAction("Index");
         }
-
+        [AllowAnonymous]
         public PartialViewResult HousesPartial(string type)
         {
             ViewBag.AjaxType = type;
@@ -135,6 +135,7 @@ namespace Client.Controllers
             var photo = _db.Houses.Where(x=>x.Id==id).Select(x => x.Photo).First();
             using (var streak = new MemoryStream(photo))
             {
+                
                 var srcImage = Image.FromStream(streak);
                 var myimg = new Bitmap(srcImage);
                 myimg.Save(streak, ImageFormat.Jpeg);

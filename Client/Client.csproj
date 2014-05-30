@@ -163,6 +163,7 @@
     <Compile Include="Controllers\HouseController.cs" />
     <Compile Include="Controllers\TypeController.cs" />
     <Compile Include="CustomModule\CustModule.cs" />
+    <Compile Include="CustomModule\CustomHandler.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -179,6 +180,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\пп.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
