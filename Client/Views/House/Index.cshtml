@@ -10,7 +10,7 @@
     @Html.ActionLink("Create New", "Create")
 </p>
 
-    <div id="qwe"></div>
+<div id="qwe"></div>
 
 
-<script> $('#qwe').load('@Url.Action("HousesPartial", "House")');</script>
+<script> $('#qwe').load('@Url.Action("HousesPartial", "House",new {type = ViewBag.AjaxType})');</script>

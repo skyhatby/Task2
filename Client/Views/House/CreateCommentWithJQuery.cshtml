@@ -1,0 +1,65 @@
+﻿@model DbFirstModel.Comment
+
+@{
+    Layout = "";
+}
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    
+
+    <div class="form-horizontal">
+       @Html.ValidationSummary(true)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Value, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Value)
+                @Html.ValidationMessageFor(model => model.Value)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.HouseId, "HouseId", new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("HouseId", String.Empty)
+                @Html.ValidationMessageFor(model => model.HouseId)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="CreateWithJQuery" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+<div>Result</div>
+<div id="list">
+    
+</div>
+
+<script type="text/javascript">
+    
+    $("form").submit(function (formData) {
+        $.ajax({
+            url: '/House/CreateComment',
+            settings: {
+                type: 'POST'
+            },
+            type: 'POST',
+            data: {
+                'Value': document.getElementById('Value').value,
+                'HouseId': document.getElementById('HouseId').value
+            }
+    }).done(function (data) {
+        $('#list').text('Comment: \"' + data.Value + '\" with HouseID = \"' + data.HouseId + '\", from \"' + data.Author + '\"');
+        }
+        );
+
+        return false; 
+    });
+</script>
+
+
+

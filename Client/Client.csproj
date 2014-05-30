@@ -234,6 +234,9 @@
     <Content Include="Views\House\Create.cshtml" />
     <Content Include="Views\House\HousesPartial.cshtml" />
     <Content Include="Views\Type\TypesPartial.cshtml" />
+    <Content Include="Views\House\CreateCommentWithJQuery.cshtml" />
+    <Content Include="Views\House\CreateCommentWithMvcAjax.cshtml" />
+    <Content Include="Views\House\CreateCommentWithPureJS.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

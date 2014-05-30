@@ -1,47 +1,49 @@
 ﻿@model IEnumerable<DbFirstModel.House>
-<table class="table">
-    <tr>
-        <th>
+@ViewBag.AjaxType
+@foreach (var item in Model)
+{
+    <h3>House</h3>
+    <div>
+        <div>
             @Html.DisplayNameFor(model => model.RoomCount)
-        </th>
-        <th>
+            @Html.DisplayFor(modelItem => item.RoomCount)
+        </div>
+        <div>
             @Html.DisplayNameFor(model => model.Price)
-        </th>
-        <th>
+            @Html.DisplayFor(modelItem => item.Price)
+        </div>
+        <div>
             @Html.DisplayNameFor(model => model.AvailabilityDate)
-        </th>
-        <th>
+            @Html.DisplayFor(modelItem => item.AvailabilityDate)
+        </div>
+        <div>
             @Html.DisplayNameFor(model => model.Owner)
-        </th>
-        <th>
+            @Html.DisplayFor(modelItem => item.Owner)
+        </div>
+        <div>
             @Html.DisplayNameFor(model => model.Type.Type1)
-        </th>
-        <th></th>
-    </tr>
+            @Html.DisplayFor(modelItem => item.Type.Type1)
+        </div>
+        <div>
+            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+        </div>
+    </div>
+    <h3>Comments</h3>
+    <div>
+        @foreach (var com in item.Comments)
+        {
+        <div>
+            @com.Value
+        </div>
+        }  
+    </div>
+    
+    <h4>Add New Comment</h4>
+    <div id="@item.Id"></div>
+    <script> $('#@item.Id').load('@Url.Action("CreateComment", "House", new { type = ViewBag.AjaxType })');</script>
+}
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.RoomCount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AvailabilityDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Owner)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type.Type1)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-            </td>
-        </tr>
-    }
-</table>
+
+

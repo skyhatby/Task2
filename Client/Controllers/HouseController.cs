@@ -20,16 +20,50 @@ namespace Client.Controllers
         // GET: /House/
         [AllowAnonymous]
         [OutputCache(Duration = 1000)]
-        public ActionResult Index()
+        public ActionResult Index(string type)
         {
+            ViewBag.AjaxType = type;
             return View();
         }
 
-        public PartialViewResult HousesPartial()
+        [HttpGet]
+        public ActionResult CreateComment(string type)
         {
+            ViewBag.HouseId = new SelectList(_db.Houses, "Id", "Owner");
+            switch (type)
+            {
+                case "jquery":
+                    return View("CreateCommentWithJQuery");
+                case "mvcAjax":
+                    return View("CreateCommentWithMvcAjax");
+                case "pureJS":
+                    return View("CreateCommentWithPureJS");
+                default:
+                    return View("CreateCommentWithPureJS");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult CreateComment(Comment comment)
+        {
+            _db.Comments.Add(comment);
+            _db.SaveChanges();
+
+            if (Request.IsAjaxRequest())
+            {
+                return new JsonResult()
+                {
+                    Data = comment
+                };
+            }
+            return RedirectToAction("Index");
+        }
+
+        public PartialViewResult HousesPartial(string type)
+        {
+            ViewBag.AjaxType = type;
             var houses = _db.Houses.Include(h => h.Type);
             return PartialView(houses);
-            
         }
 
         // GET: /House/Details/5

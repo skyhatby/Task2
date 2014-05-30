@@ -1,0 +1,71 @@
+﻿@model DbFirstModel.Comment
+
+@{
+    Layout = "";
+}
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Value, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Value)
+                @Html.ValidationMessageFor(model => model.Value)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.HouseId, "HouseId", new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("HouseId", String.Empty)
+                @Html.ValidationMessageFor(model => model.HouseId)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="CreateWithPureJS" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+<div>Result</div>
+<div id="list">
+    
+</div>
+
+
+
+
+
+<script type="text/javascript">
+    $("form").submit(function (formData) {
+     var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    console.log('XHR to: CreateComment succeeded');
+                    processReceivedData(JSON.parse(xmlhttp.responseText));
+                } else {
+                    console.log('XHR to: CreateComment -  state: ' + xmlhttp.readyState);
+                }
+            };
+            xmlhttp.open("POST", "/House/CreateComment", true);
+            xmlhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest");          
+            xmlhttp.setRequestHeader("Accept", "json");
+            xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+            xmlhttp.send('Value=' + document.getElementById('Value').value + '&HouseId=' + document.getElementById('HouseId').value);
+            
+            return false;
+    });
+        function processReceivedData(data) {
+            $('#list').text('Comment: \"' + data.Value + '\" with HouseId = \"' + data.HouseId + '\"');
+            }
+</script>
+
+
+
