@@ -6,7 +6,11 @@ namespace Client.CustomModule
     {
         public void OnException(ExceptionContext filterContext)
         {
-            filterContext.HttpContext.Response.RedirectToRoute("~/");
+            filterContext.Result = new ViewResult
+            {
+                ViewName = "~/Views/Shared/Error.cshtml"
+            };
+            filterContext.ExceptionHandled = true;
         }
         
     }
