@@ -8,6 +8,9 @@ namespace Client.CustomModule
     {
         private MyEventHandler _eventHandler;
         private static readonly ConcurrentDictionary<string, int> Hits = new ConcurrentDictionary<string, int>();
+        public ConcurrentDictionary<string,int> AllHits {
+            get { return Hits; }
+        }
         public void Dispose()
         { }
         public delegate void MyEventHandler(Object s, EventArgs e);

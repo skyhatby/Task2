@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using System.Web.Script.Serialization;
 
 namespace Client.Controllers
 {
@@ -8,6 +9,25 @@ namespace Client.Controllers
         public ActionResult Index()
         {
             return View();
+        }
+
+        [OutputCache(NoStore = true,Duration = 0)]
+        public ActionResult Hits(string callback)
+        {
+            return new JavaScriptResult() { Script = GetJsonp(callback) };
+        }
+
+        private string GetJsonp(string callback)
+        {
+            var cqw = (new JavaScriptSerializer()).Serialize(new CustomModule.CustModule().AllHits);
+            return string.Format("{0}({1});", callback, cqw);
+        }
+
+        public JsonResult JsonHits()
+        {
+            var ca = new CustomModule.CustModule().AllHits;
+            var c = new JsonResult() { Data = ca ,JsonRequestBehavior=JsonRequestBehavior.AllowGet};
+            return c;
         }
 
         public ActionResult About()
