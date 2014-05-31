@@ -163,6 +163,7 @@
     <Compile Include="Controllers\HouseController.cs" />
     <Compile Include="Controllers\TypeController.cs" />
     <Compile Include="CustomModule\CustModule.cs" />
+    <Compile Include="CustomModule\CustomExeptionFilter.cs" />
     <Compile Include="CustomModule\CustomHandler.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
