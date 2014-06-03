@@ -140,15 +140,29 @@ namespace Client.Controllers
 
         public ActionResult GetImg(int id)
         {
+            var path = Server.MapPath("~/Images/");
+            var filename = id + ".jpeg";
+            var fullpath = Path.Combine(path, filename);
+            var fi = new FileInfo(fullpath);
+            if (!fi.Exists)
+            {
+                SaveImgFromDbToFile(id, path, fullpath);
+            }
+            return File(fullpath, "image/jpeg");
+        }
+
+        private void SaveImgFromDbToFile(int id, string path, string fullpath)
+        {
             var photo = _db.Houses.Where(x => x.Id == id).Select(x => x.Photo).First();
             using (var streak = new MemoryStream(photo))
             {
                 var srcImage = Image.FromStream(streak);
                 var myimg = new Bitmap(srcImage);
-                myimg.Save(streak, ImageFormat.Jpeg);
-                return File(streak.ToArray(), "image/jpeg");
+                if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+                myimg.Save(fullpath, ImageFormat.Jpeg);
             }
         }
+
         // GET: /House/Edit/5
         public ActionResult Edit(int? id)
         {
