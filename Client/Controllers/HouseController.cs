@@ -141,14 +141,14 @@ namespace Client.Controllers
         public ActionResult GetImg(int id)
         {
             var path = Server.MapPath("~/Images/");
-            var filename = id + ".jpeg";
+            var filename = id + ".png";
             var fullpath = Path.Combine(path, filename);
             var fi = new FileInfo(fullpath);
             if (!fi.Exists)
             {
                 SaveImgFromDbToFile(id, path, fullpath);
             }
-            return File(fullpath, "image/jpeg");
+            return File(fullpath, "image/png");
         }
 
         private void SaveImgFromDbToFile(int id, string path, string fullpath)
@@ -159,7 +159,7 @@ namespace Client.Controllers
                 var srcImage = Image.FromStream(streak);
                 var myimg = new Bitmap(srcImage);
                 if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-                myimg.Save(fullpath, ImageFormat.Jpeg);
+                myimg.Save(fullpath, ImageFormat.Png);
             }
         }
 
