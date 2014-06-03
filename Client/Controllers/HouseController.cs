@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Data.Entity.Migrations.Model;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -48,7 +49,7 @@ namespace Client.Controllers
         {
             _db.Comments.Add(comment);
             _db.SaveChanges();
-
+            UpdateCache();
             if (Request.IsAjaxRequest())
             {
                 return new JsonResult()
@@ -62,8 +63,14 @@ namespace Client.Controllers
         public PartialViewResult HousesPartial(string type)
         {
             ViewBag.AjaxType = type;
-            var houses = _db.Houses.Include(h => h.Type);
-            return PartialView(houses);
+            if (HttpContext.Cache["HousesPartial"] == null)
+            {
+                UpdateCache();
+                var houses = _db.Houses.Include(h => h.Type).ToList();
+                return PartialView(houses);
+            }
+
+            return PartialView(HttpContext.Cache["HousesPartial"]);
         }
 
         // GET: /House/Details/5
@@ -112,7 +119,7 @@ namespace Client.Controllers
             inputStream.Read(buff, 0, contentLength);
             return buff;
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,RoomCount,TypeId,Price,AvailabilityDate,Owner,Photo")] HouseViewModel house)
@@ -123,6 +130,7 @@ namespace Client.Controllers
             {
                 _db.Houses.Add(hou);
                 _db.SaveChanges();
+                UpdateCache();
                 return RedirectToAction("Index");
             }
 
@@ -132,10 +140,9 @@ namespace Client.Controllers
 
         public ActionResult GetImg(int id)
         {
-            var photo = _db.Houses.Where(x=>x.Id==id).Select(x => x.Photo).First();
+            var photo = _db.Houses.Where(x => x.Id == id).Select(x => x.Photo).First();
             using (var streak = new MemoryStream(photo))
             {
-                
                 var srcImage = Image.FromStream(streak);
                 var myimg = new Bitmap(srcImage);
                 myimg.Save(streak, ImageFormat.Jpeg);
@@ -163,12 +170,13 @@ namespace Client.Controllers
         // сведения см. в статье http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include="Id,RoomCount,TypeId,Price,AvailabilityDate,Owner,Photo")] House house)
+        public ActionResult Edit([Bind(Include = "Id,RoomCount,TypeId,Price,AvailabilityDate,Owner,Photo")] House house)
         {
             if (ModelState.IsValid)
             {
                 _db.Entry(house).State = EntityState.Modified;
                 _db.SaveChanges();
+                UpdateCache();
                 return RedirectToAction("Index");
             }
             ViewBag.TypeId = new SelectList(_db.Types, "Id", "Type1", house.TypeId);
@@ -196,9 +204,17 @@ namespace Client.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             var house = _db.Houses.Find(id);
+            _db.Comments.RemoveRange(house.Comments);
             _db.Houses.Remove(house);
             _db.SaveChanges();
+            UpdateCache();
             return RedirectToAction("Index");
+        }
+
+        private void UpdateCache()
+        {
+            var houses = _db.Houses.Include(h => h.Type).Include(x => x.Comments).ToList();
+            HttpContext.Cache["HousesPartial"] = houses;
         }
 
         protected override void Dispose(bool disposing)

@@ -22,8 +22,12 @@ namespace Client.Controllers
         public PartialViewResult TypesPartial()
         {
             var types = _db.Types.ToList();
-            return PartialView(types);
-
+            if (HttpContext.Cache["TypesPartial"] == null)
+            {
+                UpdateCache();
+                return PartialView(types);
+            }
+            return PartialView(HttpContext.Cache["TypesPartial"]);
         }
 
         // GET: /Type/Details/5
@@ -59,6 +63,7 @@ namespace Client.Controllers
             if (!ModelState.IsValid) return View(type);
             _db.Types.Add(type);
             _db.SaveChanges();
+            UpdateCache();
             return RedirectToAction("Index");
         }
 
@@ -88,6 +93,7 @@ namespace Client.Controllers
             {
                 _db.Entry(type).State = EntityState.Modified;
                 _db.SaveChanges();
+                UpdateCache();
                 return RedirectToAction("Index");
             }
             return View(type);
@@ -114,9 +120,21 @@ namespace Client.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             var type = _db.Types.Find(id);
+            foreach (var houses in _db.Houses.Where(x=>x.TypeId==id))
+            {
+                _db.Comments.RemoveRange(houses.Comments);
+            }
+            _db.Houses.RemoveRange(type.Houses);
             _db.Types.Remove(type);
             _db.SaveChanges();
+            UpdateCache();
             return RedirectToAction("Index");
+        }
+
+        private void UpdateCache()
+        {
+            var houses = _db.Houses.Include(h => h.Type).Include(x => x.Comments).ToList();
+            HttpContext.Cache["TypesPartial"] = houses;
         }
 
         protected override void Dispose(bool disposing)
