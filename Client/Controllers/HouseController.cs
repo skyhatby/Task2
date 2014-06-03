@@ -140,15 +140,22 @@ namespace Client.Controllers
 
         public ActionResult GetImg(int id)
         {
-            var path = Server.MapPath("~/Images/");
-            var filename = id + ".png";
-            var fullpath = Path.Combine(path, filename);
+            string path = Server.MapPath("~/Images/");
+            var fullpath = GetPath(id);
             var fi = new FileInfo(fullpath);
             if (!fi.Exists)
             {
                 SaveImgFromDbToFile(id, path, fullpath);
             }
             return File(fullpath, "image/png");
+        }
+
+        private string GetPath(int id)
+        {
+            var path = Server.MapPath("~/Images/");
+            var filename = id + ".png";
+            var fullpath = Path.Combine(path, filename);
+            return fullpath;
         }
 
         private void SaveImgFromDbToFile(int id, string path, string fullpath)
@@ -188,6 +195,12 @@ namespace Client.Controllers
         {
             if (ModelState.IsValid)
             {
+                var hs = _db.Houses.Find(house.Id);
+                if (hs.Photo != house.Photo)
+                {
+                    var fi = new FileInfo(GetPath(hs.Id));
+                    fi.Delete();
+                }
                 _db.Entry(house).State = EntityState.Modified;
                 _db.SaveChanges();
                 UpdateCache();
